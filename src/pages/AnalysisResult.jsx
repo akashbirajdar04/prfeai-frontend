@@ -216,7 +216,7 @@ const AnalysisResult = () => {
                             <p className="text-indigo-300">npm install ai-perf-sdk</p>
                             <p className="text-slate-300 border-t border-slate-800 pt-2 mt-2">
                                 <span className="text-purple-400">const</span> {'{'} initPerformanceSDK {'}'} = <span className="text-purple-400">require</span>(<span className="text-green-400">'ai-perf-sdk'</span>);<br />
-                                initPerformanceSDK({'{'} collectorEndpoint: <span className="text-green-400">'{import.meta.env.VITE_API_URL?.replace('/api', '/api/telemetry') || 'http://localhost:5000/api/telemetry'}'</span>, headers: {'{'} <span className="text-green-400">'x-session-id'</span>: <span className="text-green-400">'{id}'</span> {'}'} {'}'});
+                                initPerformanceSDK({'{'} collectorEndpoint: <span className="text-green-400">'{import.meta.env.VITE_API_URL?.replace('/api', '/api/telemetry') || 'https://prfeai-backend.onrender.com/api/telemetry'}'</span>, headers: {'{'} <span className="text-green-400">'x-session-id'</span>: <span className="text-green-400">'{id}'</span> {'}'} {'}'});
                             </p>
                         </div>
                     </div>
