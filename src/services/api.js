@@ -2,12 +2,20 @@ import axios from 'axios';
 
 const getBaseURL = () => {
     const envUrl = import.meta.env.VITE_API_URL;
-    const fallback = 'https://prfeai-backend.onrender.com/api';
+    const productionUrl = 'https://prfeai-backend.onrender.com/api';
+
+    // Check if we are running in production environment
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    if (!isLocal) {
+        console.log('[API Config] Non-local environment detected, forcing production URL');
+        return productionUrl;
+    }
 
     if (envUrl) {
         return envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`;
     }
-    return fallback;
+    return productionUrl;
 };
 
 const baseURL = getBaseURL();
