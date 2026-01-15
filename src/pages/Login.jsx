@@ -20,8 +20,10 @@ const Login = () => {
         setLoading(true);
 
         try {
+            console.log('Attempting login for:', email);
             // Assuming backend endpoint is /auth/login
             const response = await api.post('/auth/login', { email, password });
+            console.log('Login response received:', response.status);
             login(response.data.user, response.data.token);
             navigate(from, { replace: true });
         } catch (err) {
