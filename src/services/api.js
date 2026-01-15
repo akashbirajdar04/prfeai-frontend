@@ -1,67 +1,20 @@
 import axios from 'axios';
 
-const getBaseURL = () => {
-    const envUrl = import.meta.env.VITE_API_URL;
-    const productionUrl = 'https://prfeai-backend.onrender.com/api';
-
-    // Check if we are running in production environment
-    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-    if (!isLocal) {
-        console.log('[API Config] Non-local environment detected, forcing production URL');
-        return productionUrl;
-    }
-
-    if (envUrl) {
-        return envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`;
-    }
-    return productionUrl;
-};
-
-const baseURL = getBaseURL();
-console.log('[API Config] Resolving baseURL:', {
-    VITE_API_URL: import.meta.env.VITE_API_URL,
-    resolvedBaseURL: baseURL,
-    isProduction: import.meta.env.PROD
-});
-
 const api = axios.create({
-    baseURL,
+    // HARDCODED to production backend to guarantee it never hits localhost
+    baseURL: 'https://prfeai-backend.onrender.com/api',
     headers: {
         'Content-Type': 'application/json',
     },
-    timeout: 30000, // 30 second timeout
 });
 
-api.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        console.log(`[API Request] ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
-        return config;
-    },
-    (error) => {
-        console.error('[API Request Error]', error);
-        return Promise.reject(error);
+// Automatically add the auth token from localStorage to every request
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
-);
-
-api.interceptors.response.use(
-    (response) => {
-        console.log(`[API Response] ${response.status} from ${response.config.url}`);
-        return response;
-    },
-    (error) => {
-        console.error('[API Response Error]', {
-            url: error.config?.url,
-            status: error.response?.status,
-            message: error.message,
-            data: error.response?.data
-        });
-        return Promise.reject(error);
-    }
-);
+    return config;
+});
 
 export default api;
